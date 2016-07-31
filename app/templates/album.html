@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-cn">
+    <meta charset="UTF-8">
+    <title>相册管理</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="designer" content=""/>
+    <meta name="author" content="yhw"/>
+    <link rel="stylesheet" href="/static/css/style.css?v=2.0" />
+    <link rel="stylesheet" href="/static/css/dialog.css?v=2.0" />
+    <link rel="icon" href="/static/css/fav/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/static/css/fav/favicon.ico" type="image/x-icon" />
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+</head>
+<body class="albumPage">
+    <div class="g-top-bar">
+        <div class="g-inner">
+            <div class="user-infor f-l">
+                <div class="user-icon i-b"><img src="/static/css/images/user_icon.png" height="50" width="50" alt=""></div>
+                <p class="username i-b" id="loginName"></p>
+                <a href="javascript:void(0);" class="logout i-b" id="logout">[退出]</a>
+            </div>
+            <div class="create-cont f-l" id="top-btn-box">
+                <a href="javascript:void(0);" class="btn upload js-upfile-pop">上传照片</a>
+                <a href="javascript:void(0);" class="btn create js-create-pop">创建相册</a>
+            </div>
+        </div>        
+    </div>
+    <div class="main">
+        <div class="album-wrap">
+            <!-- 没有相册 s -->
+            <div class="album-null hide" id="albumNull">
+                <i class="bg"></i>
+                <p class="t">您还没有相册，请<a href="javascript:void(0);" class="js-create-pop">点击创建</a></p>
+            </div>
+            <!-- 没有相册 e -->
+            <!-- 相册列表 s -->
+            <div class="album-content cls hide" id="albumContent"></div>
+            <!-- 相册列表 e -->
+            <!-- 相册列表模板 -->
+            <script type="text/tpl" id="ceilTpl">
+                <div class="album-list" data-id="{$id}">
+                    <div class="cover-con">
+                        <div class="cover"><a href="{$photo_index_url}"><img src="{$cover_photo_path}" alt=""></a></div>
+                        <span class="num">{$photos_count}</span>
+                    </div>
+                    <div class="album-o">
+                        <p class="name"><a href="{$photo_index_url}">{$albumName}</a></p>
+                        <div class="operate">
+                            <span class="f-l time">{$createTime}</span>
+                            <div class="f-r op-btn">
+                                <a href="javascript:void(0)" class="edit" data-desc="{$desc}" data-id="{$id}"></a>
+                                <a href="javascript:void(0)" class="delete" data-id="{$id}"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </script>
+        </div>
+    </div>
+
+<!-- 创建相册模板 -->
+<script type="text/tpl" id="create-album-tpl">
+    <div class="d-create-album" id="{$id}">
+        <div class="d-form-box">
+            <div class="int-box cls">
+                <div class="label">相册名称:</div>
+                <div class="int"><input type="text" class="name"></div>
+            </div>
+            <div class="int-box cls">
+                <div class="label">相册描述:</div>
+                <div class="int"><textarea ></textarea></div>
+            </div>
+            <div class="d-btn-box">
+                <a href="javascript:void(0);" class="btn create-album-btn">{$btnTxt}</a>
+                <a href="javascript:void(0);" class="cancel-btn">取消</a>
+            </div>
+        </div>
+    </div>
+</script>
+
+<!-- 上传图片模板 -->
+<script type="text/tpl" id="upload-dialog-tpl">
+    <div class="upload-pop-wrap">
+        <div class="sq-dialog-masking"></div>
+        <div class="sq-dialog">
+            <div class="sq-dialog-body">
+                <div class="sq-dialog-titlebar">
+                    <div class="sq-dialog-titlebar-text">
+                        <span class="f-l">图片上传</span>
+                        <div class="f-l select-box">
+                            上传到
+                            <select class="album-select"></select>
+                        </div>
+                        <a href="javascript:void(0);" class="f-l create js-create-pop">+创建相册</a>
+                    </div>
+                    <a href="javascript:void(0);" title="关闭" class="sq-dialog-close">X</a>
+                </div>
+                <div class="sq-dialog-client">
+                    <div class="sq-dialog-content">
+                        
+                        <div id="uploader" class="uploader-box">
+                            <!-- 上传成功 -->
+                            <div id="success-uploader" class="success-uploader">
+                                <div class="con">
+                                    <p><i></i>您已成功上传 <span class="num">0</span> 张照片！</p>
+                                    <div class="top-btn-box">
+                                        <a href="javascript:void(0);" class="check-photo">查看照片</a>
+                                        <a href="javascript:void(0);" class="again">继续上传</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="before-uploader">
+                                <div class="queueList">
+                                    <div id="dndArea" class="placeholder">
+                                        <div id="filePicker"></div>
+                                        <p>按住Ctrl可多选照片</p>
+                                    </div>
+                                </div>
+                                <div class="statusBar" style="display:none;">
+                                    <div class="progress">
+                                        <span class="text">0%</span>
+                                        <span class="percentage"></span>
+                                    </div><div class="info"></div>
+                                    <div class="btns">
+                                        <div id="filePicker2"></div><div class="uploadBtn">开始上传</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--  -->
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+</script>
+
+<!-- end -->
+    <script type="text/javascript" src="http://ptres.37.com/js/sq/lib/sq.core.js"></script>
+    <script type="text/javascript" src="/static/js/sq.hddialog.js"></script>
+    <script type="text/javascript" src="/static/js/webuploader/webuploader.min.js"></script>
+    <script data-main="/static/js/album.js" src="http://ptres.37.com/js/sq/lib/require.js"></script>    
+</body>
+</html>
